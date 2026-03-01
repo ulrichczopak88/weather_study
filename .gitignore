@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# data files (VERY IMPORTANT)
+data/
+*.csv
+*.parquet
+*.feather
+*.h5
+
+# plots / exports
+plots/
+figures/
+*.png
+*.pdf
+*.html
+
+# cache
+.cache/
