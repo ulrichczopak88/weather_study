@@ -46,3 +46,5 @@ Quickstart Guide:
 
 https://matplotlib.org/stable/tutorials/introductory/pyplot.html
 
+Präsentation:
+https://docs.google.com/presentation/d/1TKD184kyNI0ZBJ-3rQIzYtTiit4XFDPfFKPMvgJcaeQ/edit?usp=sharing
