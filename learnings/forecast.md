@@ -101,7 +101,7 @@ Beispiel fuer AROME/NWP:
 url = "https://dataset.api.hub.geosphere.at/v1/timeseries/forecast/nwp-v1-1h-2500m"
 
 q = {
-    "parameters": "t2m,rr_acc",
+    "parameters": "t2m,rh2m,rr_acc,u10m,v10m,sp,ugust,vgust",
     "lat_lon": "46.83,12.77",
     "forecast_offset": 0,
 }
@@ -136,12 +136,37 @@ Praktisch wichtig: Der Nowcast nutzt andere Parameterkuerzel als die Stationsdat
 
 Die lokale `geosphere_api` uebersetzt deshalb fuer einfache Notebook-Nutzung `TL -> t2m` und `RR -> rr`, wenn Forecast-Daten abgefragt werden.
 
-Bei AROME/NWP sind die Parameterkuerzel lowercase. Ein funktionierendes Beispiel aus der Community nutzt u. a. `t2m`, `rh2m`, `rr_acc`, `sy`, `u10m`, `v10m`. Die lokale `geosphere_api` uebersetzt deshalb je Modell:
+Bei AROME/NWP sind die Parameterkuerzel lowercase. Praktisch verwendete Parameter:
+
+- `t2m`: 2-m-Temperatur, Grad Celsius
+- `rh2m`: relative Feuchte in 2 m, Prozent
+- `rr_acc`: akkumulierter Niederschlag, `kg m-2`; fuer Wasser praktisch mm
+- `u10m`, `v10m`: 10-m-Windkomponenten, `m s-1`
+- `ugust`, `vgust`: Boeen-Windkomponenten, `m s-1`
+- `sp`: Surface Pressure, Pa
+
+Die lokale `geosphere_api` uebersetzt deshalb je Modell:
 
 ```python
 model="nowcast"  # TL -> t2m, RR -> rr
 model="nwp"      # TL -> t2m, RR -> rr_acc
 ```
+
+Weitere Aliase fuer AROME:
+
+```python
+RF -> rh2m
+FFAM -> u10m,v10m
+FFX -> ugust,vgust
+DD -> u10m,v10m
+P / PRED -> sp
+```
+
+Wichtig fuer Plots:
+
+- `rr_acc` ist kumuliert seit Modelllaufbeginn. Fuer Stundenmengen muss `diff()` gebildet werden.
+- `sp` ist Modelldruck an der Modelloberflaeche, kein reduzierter Luftdruck.
+- Fuer Stationsvergleich/Foehn ist `sp` nur als Tendenz nach Offset an historische Druckdifferenzen brauchbar.
 
 Hinweis: Ich konnte die Live-Metadaten hier nicht per lokalem `curl` abrufen, weil der Netzwerkzugriff im Workspace nicht freigegeben wurde. Im Notebook sollte der Request genauso funktionieren wie deine bisherigen GeoSphere-Requests.
 

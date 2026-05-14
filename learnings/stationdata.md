@@ -235,6 +235,15 @@ Neben den geprueften `klima-v2-*` Daten gibt es `tawes-v1-10min`.
 - 10-minuetige Rohdaten, ungeprueft
 - Deckt laut Datensatzbeschreibung jeweils die letzten 3 Monate bis heute ab
 - Sinnvoll, wenn Echtzeitnaehe wichtiger ist als gepruefte/archivierte Daten
+- Wichtige aktuelle Parameter:
+  - `TL`: Lufttemperatur
+  - `RF`: relative Feuchte
+  - `RR`: Niederschlag der letzten 10 Minuten in mm
+  - `FFAM`: arithmetisches Mittel der Windgeschwindigkeit
+  - `FFX`: Windspitze/Boe der letzten 10 Minuten
+  - `DD`: Windrichtung
+  - `P`: Luftdruck auf Stationsniveau
+  - `PRED`: reduzierter Luftdruck
 
 ```python
 CURRENT_TAWES = "https://dataset.api.hub.geosphere.at/v1/station/current/tawes-v1-10min"
@@ -260,3 +269,56 @@ Fuer Live-nahe Dashboards:
 ```
 
 Beim Wechsel der Aufloesung sollte man nicht blind dieselben Parameterkuerzel verwenden, sondern kurz die jeweiligen `/metadata` pruefen. Die Request-Mechanik bleibt gleich, aber die meteorologische Bedeutung der Werte kann sich aendern: 10-Minutenwerte sind Mess-/Aggregationswerte auf kurzem Intervall, Stundenwerte koennen Momentanwerte oder Stundenaggregate sein, Tageswerte sind haeufig Tagesaggregate.
+
+## Finale Komfortfunktionen
+
+### Meteogramm
+
+```python
+from geosphere_api import meteogram
+
+result = meteogram(
+    station="Lienz",
+    history="12h",
+    forecast=None,
+    show_data=["precip", "temp", "pressure", "wind"],
+    mode="bright",
+    output="outputs/lienz_meteogram_bright_pressure.png",
+)
+```
+
+`show_data` kann enthalten:
+
+```python
+["precip", "temp", "pressure", "wind"]
+```
+
+### Foehndiagramm
+
+```python
+from geosphere_api import foehndiagramm
+
+result = foehndiagramm(
+    south="Lienz",
+    north="Zell am See",
+    history="72h",
+    forecast=None,
+    wind_stations=["Lienz", "Sonnblick", "Kals"],
+    include_gusts=True,
+    output="outputs/foehndiagramm_lienz_zellamsee_wind_kals.png",
+)
+```
+
+Historische Druckdifferenz:
+
+```text
+PRED(south) - PRED(north)
+```
+
+Forecast-Druckdifferenz:
+
+```text
+sp(south_gridpoint) - sp(north_gridpoint)
+```
+
+Da `sp` nicht hoehenreduziert ist, wird die Forecast-Differenz fuer den Plot an die letzte historische Druckdifferenz ge-offsettet.

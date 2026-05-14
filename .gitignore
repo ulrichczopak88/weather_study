@@ -32,6 +32,8 @@ figures/
 *.png
 *.pdf
 *.html
+!outputs/
+!outputs/*.png
 
 # cache
 .cache/
